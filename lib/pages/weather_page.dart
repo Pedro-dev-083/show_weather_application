@@ -3,34 +3,29 @@ import 'package:lottie/lottie.dart';
 import 'package:show_weather_application/services/weather_service.dart';
 
 import '../models/weather_model.dart';
+import 'login_page.dart';
 
 class WeatherPage extends StatefulWidget {
-  const WeatherPage({super.key});
+  const WeatherPage({Key? key}) : super(key: key);
 
   @override
   State<WeatherPage> createState() => _WeatherPageState();
 }
 
 class _WeatherPageState extends State<WeatherPage> {
-  // Api key
   final _weatherService = WeatherService('e597fea95debb4c027116931ae62da44');
   Weather? _weather;
 
   // Fetch weather
   _fetchWeather() async {
-    // Get the current city
     String cityName = await _weatherService.getCurrentCity();
 
-    // Get weather for city
     try {
       final weather = await _weatherService.getWeather(cityName);
       setState(() {
         _weather = weather;
       });
-    }
-
-    // Any errors
-    catch (e) {
+    } catch (e) {
       print(e);
     }
   }
@@ -60,32 +55,40 @@ class _WeatherPageState extends State<WeatherPage> {
     }
   }
 
+  // Logout
+  _logout() {
+    Navigator.pushReplacement(
+      context,
+      MaterialPageRoute(builder: (context) => LoginPage()),
+    );
+  }
+
   // Init state
   @override
   void initState() {
     super.initState();
-
-    // Fetch weather on startup
     _fetchWeather();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Weather Page'),
+        actions: [
+          IconButton(
+            onPressed: _logout,
+            icon: Icon(Icons.logout),
+          ),
+        ],
+      ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // City name
             Text(_weather?.cityName ?? "Loading city..."),
-
-            // Animation
             Lottie.asset(getWeatherAnimation(_weather?.mainCondition)),
-        
-            // Temperature
             Text('${_weather?.temperature.round()}°C'),
-
-            // Weather Condition
             Text(_weather?.mainCondition ?? "")
           ],
         ),
