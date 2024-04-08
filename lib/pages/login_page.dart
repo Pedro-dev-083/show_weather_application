@@ -37,7 +37,7 @@ class LoginScreen extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         if (constraints.maxWidth > 600) {
-          // Modo web
+          // Web
           return Center(
             child: SizedBox(
               width: 400.0,
@@ -45,7 +45,7 @@ class LoginScreen extends StatelessWidget {
             ),
           );
         } else {
-          // Modo mobile
+          // Mobile
           return LoginPage();
         }
       },
